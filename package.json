@@ -10,8 +10,10 @@
   },
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-preset-kyt-react": "0.3.0",
     "compression": "1.7.1",
+    "eslint-config-kyt": "^0.5.0",
     "express": "4.16.2",
     "kyt": "0.9.0",
     "prop-types": "15.6.0",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "enzyme": "^3.6.0",
+    "eslint-plugin-prettier": "^2.6.2",
     "prettier": "1.8.2"
   },
   "scripts": {

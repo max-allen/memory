@@ -1,14 +1,38 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 import Timer from '../Timer/Timer'
+import Cards from '../Cards/Cards'
 import styles from './Game.scss'
+import axios from 'axios'
 
-const Game = () => (
-  <div>
-    <h1 className={styles.header}>NYT Games Code Test</h1>
-    <Timer />
-    <div className={styles.placeholder}>Let the games begin (here).</div>
-  </div>
-)
+export default class Game extends Component {
+  constructor() {
+    super()
 
-export default Game
+    this.state = {
+      setting: 'easy',
+      cards: {},
+    }
+  }
+
+  componentDidMount() {
+    axios
+      .get('https://web-code-test-dot-nyt-games-prd.appspot.com/cards.json')
+      .then(resp => resp.data)
+      .then(data => this.setState({ cards: data.levels }))
+  }
+
+  render() {
+    const { cards, setting } = this.state
+
+    return (
+      <div>
+        <h1 className={styles.header}>Memory</h1>
+        <Timer />
+        {this.state.cards.length && (
+          <Cards data={cards.filter(level => level.difficulty === setting)[0].cards} />
+        )}
+      </div>
+    )
+  }
+}
