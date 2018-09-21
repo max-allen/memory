@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import Timer from '../Timer/Timer'
+import Navbar from '../Navbar/Navbar'
 import Cards from '../Cards/Cards'
 import styles from './Game.scss'
 import axios from 'axios'
@@ -27,8 +28,7 @@ export default class Game extends Component {
 
     return (
       <div>
-        <h1 className={styles.header}>Memory</h1>
-        <Timer />
+        <Navbar />
         {this.state.cards.length && (
           <Cards data={cards.filter(level => level.difficulty === setting)[0].cards} />
         )}
