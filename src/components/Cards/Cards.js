@@ -46,7 +46,7 @@ class Card extends Component {
     const { cardRef, chooseCard } = this
 
     return (
-      <div className={styles.card} ref={cardRef} onClick={() => chooseCard({ [id]: data })}>
+      <div className={styles.card} ref={cardRef} onClick={() => { chooseCard({ [id]: data }) }}>
         {showing ? data : ''}
       </div>
     )

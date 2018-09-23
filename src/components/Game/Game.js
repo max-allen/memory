@@ -29,8 +29,7 @@ export default class Game extends Component {
   }
 
   componentDidUpdate() {
-    let { selectedCards, resetTurn } = this.state
-    let { removedCards } = this.state
+    let { cards, setting, selectedCards, removedCards, resetTurn } = this.state
 
     if (resetTurn) this.setState({ resetTurn: false })
 
@@ -38,12 +37,23 @@ export default class Game extends Component {
     const cardValues = Object.values(selectedCards)
 
     if (cardValues.length === 2) {
+
       if (cardValues[0] === cardValues[1]) {
+
+       let cardsIdx = cards.findIndex(level => level.difficulty === setting)
+
+       let cardSet = cards[cardsIdx]
+
+       cardSet.cards = cardSet.cards.filter(card => card !== cardValues[0])
+
+       cards[cardsIdx] = cardSet
+
         removedCards = Object.assign({}, removedCards, selectedCards)
         selectedCards = {}
 
         this.setState({ removedCards, selectedCards })
       } else {
+
         selectedCards = {}
         resetTurn = true
 
@@ -70,7 +80,7 @@ export default class Game extends Component {
 
     return (
       <div>
-        <Navbar />
+        <Navbar removedCards={removedCards} />
         {this.state.cards.length && (
           <Cards data={cards.filter(level => level.difficulty === setting)[0].cards} updateSelected={this.updateSelected} resetTurn={resetTurn} />
         )}
