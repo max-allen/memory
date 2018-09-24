@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { selectCard } from '../../store'
 import styles from './Cards.scss'
 
 class Card extends Component {
@@ -16,11 +18,9 @@ class Card extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { resetTurn } = this.props
-
-    if (prevProps.resetTurn !== resetTurn) {
-      if (resetTurn) {
-        this.setState({ showing: false, selected: false })
+    if (!this.props.selectedCards.length) {
+      if (prevProps.selectedCards.length) {
+        this.setState ({ showing: false, selected: false})
       }
     }
   }
@@ -41,9 +41,11 @@ class Card extends Component {
   }
 
   render() {
-    const { id, data, updateSelected } = this.props
+    const { id, data } = this.props
     const { showing } = this.state
     const { cardRef, chooseCard } = this
+
+    // console.log('PROPS', this.props)
 
     return (
       <div className={styles.card} ref={cardRef} onClick={() => { chooseCard({ [id]: data }) }}>
@@ -53,18 +55,34 @@ class Card extends Component {
   }
 }
 
+
 const CardGrid = (props) => {
-  const { data, updateSelected, resetTurn } = props
+  const { cards, store, updateSelected, selectedCards } = props
 
   return (
     <div className={styles.container}>
         {
-          data.map((card, idx) => {
-            return <Card key={idx} id={idx} data={card} updateSelected={updateSelected} resetTurn={resetTurn} />
+          cards.map((card, idx) => {
+            return <Card key={`${idx.toString()}${card}`} id={idx} data={card} updateSelected={updateSelected} selectedCards={selectedCards} />
           })
         }
     </div>
   )
 }
 
-export default CardGrid
+const mapState = state => {
+  return {
+    cards: state.game.cards,
+    selectedCards: state.game.selectedCards,
+  }
+}
+
+const mapDispatch = dispatch => {
+  return {
+    updateSelected: card => {
+      dispatch(selectCard(card))
+    },
+  }
+}
+
+export default connect(mapState, mapDispatch)(CardGrid)

@@ -5,86 +5,82 @@ import Navbar from '../Navbar/Navbar'
 import Cards from '../Cards/Cards'
 import styles from './Game.scss'
 import axios from 'axios'
+import { connect } from 'react-redux'
+import { fetchCards, endTurn, removeCards } from '../../store'
 
-export default class Game extends Component {
+class Game extends Component {
   constructor() {
     super()
 
     this.state = {
-      setting: 'easy',
-      cards: {},
-      selectedCards: {},
       removedCards: {},
-      resetTurn: false,
+      gameOver: false,
     }
-
-    this.updateSelected = this.updateSelected.bind(this)
   }
 
   componentDidMount() {
-    axios
-      .get('https://web-code-test-dot-nyt-games-prd.appspot.com/cards.json')
-      .then(resp => resp.data)
-      .then(data => this.setState({ cards: data.levels }))
+    const { cards } = this.props
+
+    if (!Object.keys(cards).length) {
+      this.props.getCards()
+    }
   }
 
-  componentDidUpdate() {
-    let { cards, setting, selectedCards, removedCards, resetTurn } = this.state
+  componentDidUpdate(prevProps) {
+    let { selectedCards } = this.props
 
-    if (resetTurn) this.setState({ resetTurn: false })
+    if (selectedCards.length === 2) {
+      selectedCards = selectedCards.map((card) => { return Object.values(card)[0] })
+      let firstCard = selectedCards.splice(0, 1)[0]
 
-    const cardKeys = Object.keys(selectedCards)
-    const cardValues = Object.values(selectedCards)
-
-    if (cardValues.length === 2) {
-
-      if (cardValues[0] === cardValues[1]) {
-
-       let cardsIdx = cards.findIndex(level => level.difficulty === setting)
-
-       let cardSet = cards[cardsIdx]
-
-       cardSet.cards = cardSet.cards.filter(card => card !== cardValues[0])
-
-       cards[cardsIdx] = cardSet
-
-        removedCards = Object.assign({}, removedCards, selectedCards)
-        selectedCards = {}
-
-        this.setState({ removedCards, selectedCards })
+      if (selectedCards.includes(firstCard)) {
+        this.props.removeCards(firstCard)
       } else {
-
-        selectedCards = {}
-        resetTurn = true
-
-        this.setState({ selectedCards, resetTurn })
+        this.props.endTurn()
       }
     }
   }
 
-  updateSelected(card) {
-    const { selectedCards } = this.state
-    const ids = Object.keys(selectedCards)
-
-    const nextId = Object.keys(card)[0]
-
-    if (!ids.includes(nextId)) {
-      selectedCards[nextId] = card[nextId]
-
-      this.setState({ selectedCards })
-    }
-  }
-
   render() {
-    const { cards, setting, removedCards, resetTurn } = this.state
+    const { setting, removedCards, resetTurn } = this.state
+    const { cards, store } = this.props
 
     return (
       <div>
         <Navbar removedCards={removedCards} />
-        {this.state.cards.length && (
-          <Cards data={cards.filter(level => level.difficulty === setting)[0].cards} updateSelected={this.updateSelected} resetTurn={resetTurn} />
+
+        {cards.length && (
+          <Cards store={store} />
         )}
+
+        {this.state.gameOver &&
+          <div>Game Over!</div>
+        }
+
       </div>
     )
   }
 }
+
+const mapState = state => {
+  return {
+    cards: state.game.cards,
+    selectedCards: state.game.selectedCards,
+  }
+}
+
+const mapDispatch = dispatch => {
+  return {
+    getCards: () => {
+      return dispatch(fetchCards())
+    },
+    endTurn: () => {
+      return dispatch(endTurn())
+    },
+    removeCards: card => {
+      return dispatch(removeCards(card))
+    },
+  }
+}
+
+export default connect(mapState, mapDispatch)(Game)
