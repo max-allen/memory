@@ -3,22 +3,37 @@ import Timer from '../Timer/Timer'
 import styles from './Navbar.scss'
 
 const Navbar = (props) =>  {
-	const { removedCards } = props
-	return (
-	  <div className={styles.container}>
-	  	<h1 className={styles.header}>Memory</h1>
-	    <Timer />
-	    {Object.keys(removedCards).length ?
-	    	Object.keys(removedCards).map((idx) => {
-	    		return (
-	    			<div key={idx}>{removedCards[idx]}</div>
-	    		)
-	    	})
-	    : null
-		}
-	  </div>
-	)
-	
+  const { removedCards, setting, changeSetting, gameInProgress } = props
+
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.header}>Memory!</h1>
+
+      { gameInProgress &&
+        <Timer key={setting} />
+      }
+
+    <select onChange={changeSetting}>
+      {['easy', 'hard'].map(level => {
+        return (
+          <option key={level.toString()} defaultValue={setting}>{level}</option>
+        )
+      })
+      }
+    </select>
+
+      {Object.keys(removedCards).length ?
+        Object.keys(removedCards).map((idx) => {
+          return (
+            <div key={idx} className={styles.cards}>{removedCards[idx]}</div>
+          )
+        })
+      : null
+    }
+
+    </div>
+  )
+  
 }
 
 

@@ -4,17 +4,22 @@ const CARD_DATA_LOADED = 'CARD_DATA_LOADED'
 const CARD_SELECTED = 'CARD_SELECTED'
 const TURN_RESET = 'TURN_RESET'
 const CARDS_REMOVED = 'CARDS_REMOVED'
+const SETTING_CHANGED = 'SETTING_CHANGED'
+const GAME_STATUS_CHANGED = 'GAME_STATUS_CHANGED'
 
 const loadCardData = (cardData) => ({ type: CARD_DATA_LOADED, cardData })
 const setSelectedCard = (selectedCard) => ({ type: CARD_SELECTED, selectedCard })
 const resetTurn = () => ({ type: TURN_RESET })
-const cardsRemoved = (nextCards) => ({ type: CARDS_REMOVED, nextCards })
+const cardsRemoved = (nextCards, removedCards) => ({ type: CARDS_REMOVED, nextCards, removedCards })
+const changeSetting = (nextSetting) => ({ type: SETTING_CHANGED, nextSetting })
+const toggleGameStatus = (nextStatus) => ({ type: GAME_STATUS_CHANGED, nextStatus })
 
 const gameState = {
   setting: 'easy',
   cards: {},
   selectedCards: [],
   removedCards: [],
+  gameInProgress: false,
 }
 
 export const fetchCards = () => {
@@ -35,7 +40,11 @@ export const fetchCards = () => {
 export const selectCard = (card) => {
   return (dispatch, getState) => {
     const state = getState()
-    const { selectedCards } = state.game
+    const { selectedCards, gameInProgress } = state.game
+
+    if (!selectedCards.length && !gameInProgress) {
+      dispatch(toggleGameStatus(!gameInProgress))
+    }
 
     dispatch(setSelectedCard(card))
   }
@@ -50,8 +59,22 @@ export const removeCards = removedCard => {
 
     let nextCards = cards.filter(card => {return card !== removedCard})
 
-    dispatch(cardsRemoved(nextCards))
+    dispatch(cardsRemoved(nextCards, removedCard))
     dispatch(resetTurn())
+  }
+}
+
+export const editSetting = (nextSetting) =>  {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { gameInProgress } = state.game
+
+    if (gameInProgress) {
+      dispatch(toggleGameStatus(!gameInProgress))
+    }
+
+    dispatch(changeSetting(nextSetting))
+    dispatch(fetchCards())
   }
 }
 
@@ -64,7 +87,11 @@ export default (state = gameState, action) => {
     case TURN_RESET:
       return Object.assign({}, state, { selectedCards: [] })
     case CARDS_REMOVED:
-      return Object.assign({}, state, { cards: action.nextCards })
+      return Object.assign({}, state, { cards: action.nextCards, removedCards: state.removedCards.slice().concat([(action.removedCards  )]) })
+    case SETTING_CHANGED:
+      return Object.assign({}, state, { setting: action.nextSetting })
+    case GAME_STATUS_CHANGED:
+      return Object.assign({}, state, { gameInProgress: action.nextStatus })
     default:
       return state
   }

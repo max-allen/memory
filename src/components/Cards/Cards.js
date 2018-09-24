@@ -25,6 +25,10 @@ class Card extends Component {
     }
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick)
+  }
+
   handleClick(e) {
     const { showing, selected } = this.state
 
@@ -45,8 +49,6 @@ class Card extends Component {
     const { showing } = this.state
     const { cardRef, chooseCard } = this
 
-    // console.log('PROPS', this.props)
-
     return (
       <div className={styles.card} ref={cardRef} onClick={() => { chooseCard({ [id]: data }) }}>
         {showing ? data : ''}
@@ -55,8 +57,7 @@ class Card extends Component {
   }
 }
 
-
-const CardGrid = (props) => {
+const CardGrid = props => {
   const { cards, store, updateSelected, selectedCards } = props
 
   return (
@@ -88,5 +89,10 @@ const mapDispatch = dispatch => {
     },
   }
 }
+
+// CardGrid.propTypes = {
+//   cards: PropTypes.
+
+// }
 
 export default connect(mapState, mapDispatch)(CardGrid)

@@ -6,7 +6,7 @@ import Cards from '../Cards/Cards'
 import styles from './Game.scss'
 import axios from 'axios'
 import { connect } from 'react-redux'
-import { fetchCards, endTurn, removeCards } from '../../store'
+import { fetchCards, endTurn, removeCards, editSetting } from '../../store'
 
 class Game extends Component {
   constructor() {
@@ -42,12 +42,11 @@ class Game extends Component {
   }
 
   render() {
-    const { setting, removedCards, resetTurn } = this.state
-    const { cards, store } = this.props
+    const { cards, store, removedCards, setting, changeSetting, gameInProgress } = this.props
 
     return (
       <div>
-        <Navbar removedCards={removedCards} />
+        <Navbar removedCards={removedCards} setting={setting} changeSetting={changeSetting} gameInProgress={gameInProgress} />
 
         {cards.length && (
           <Cards store={store} />
@@ -66,6 +65,9 @@ const mapState = state => {
   return {
     cards: state.game.cards,
     selectedCards: state.game.selectedCards,
+    removedCards: state.game.removedCards,
+    setting: state.game.setting,
+    gameInProgress: state.game.gameInProgress,
   }
 }
 
@@ -79,6 +81,10 @@ const mapDispatch = dispatch => {
     },
     removeCards: card => {
       return dispatch(removeCards(card))
+    },
+
+    changeSetting: e => {
+      return dispatch(editSetting(e.target.value))
     },
   }
 }
