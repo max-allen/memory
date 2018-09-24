@@ -61,11 +61,15 @@ const CardGrid = (props) => {
 
   return (
     <div className={styles.container}>
-        {
-          cards.map((card, idx) => {
-            return <Card key={`${idx.toString()}${card}`} id={idx} data={card} updateSelected={updateSelected} selectedCards={selectedCards} />
-          })
-        }
+      {cards.map((card, idx) => (
+        <Card
+          key={`${idx.toString()}${card}`}
+          id={idx}
+          data={card}
+          updateSelected={updateSelected}
+          selectedCards={selectedCards}
+        />
+      ))}
     </div>
   )
 }
