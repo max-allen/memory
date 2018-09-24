@@ -13,8 +13,7 @@ class Game extends Component {
     super()
 
     this.state = {
-      removedCards: {},
-      gameOver: false,
+       gameOver: false,
     }
   }
 
@@ -42,17 +41,26 @@ class Game extends Component {
   }
 
   render() {
-    const { cards, store, removedCards, setting, changeSetting, gameInProgress } = this.props
+    const { cards, store, removedCards, setting, changeSetting, gameInProgress, lastTimeElapsed } = this.props
 
     return (
       <div>
-        <Navbar removedCards={removedCards} setting={setting} changeSetting={changeSetting} gameInProgress={gameInProgress} />
+        <Navbar
+          removedCards={removedCards}
+          setting={setting}
+          changeSetting={changeSetting}
+          gameInProgress={gameInProgress}
+          store={store}
+          lastTimeElapsed={lastTimeElapsed}
+        />
 
         {cards.length && (
-          <Cards store={store} />
+          <Cards 
+            store={store} 
+          />
         )}
 
-        {this.state.gameOver &&
+        {this.props.gameOver &&
           <div>Game Over!</div>
         }
 
@@ -68,6 +76,7 @@ const mapState = state => {
     removedCards: state.game.removedCards,
     setting: state.game.setting,
     gameInProgress: state.game.gameInProgress,
+    lastTimeElapsed: state.game.lastTimeElapsed,
   }
 }
 

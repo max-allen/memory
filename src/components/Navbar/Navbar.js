@@ -3,14 +3,14 @@ import Timer from '../Timer/Timer'
 import styles from './Navbar.scss'
 
 const Navbar = (props) =>  {
-  const { removedCards, setting, changeSetting, gameInProgress } = props
+  const { removedCards, setting, changeSetting, gameInProgress, store, lastTimeElapsed } = props
 
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Memory!</h1>
 
-      { gameInProgress &&
-        <Timer key={setting} />
+      { gameInProgress && 
+        <Timer key={setting} store={store} />
       }
 
     <select onChange={changeSetting}>

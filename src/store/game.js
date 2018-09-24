@@ -6,6 +6,8 @@ const TURN_RESET = 'TURN_RESET'
 const CARDS_REMOVED = 'CARDS_REMOVED'
 const SETTING_CHANGED = 'SETTING_CHANGED'
 const GAME_STATUS_CHANGED = 'GAME_STATUS_CHANGED'
+const TIME_RECORDED = 'TIME_RECORDED'
+const GAME_COMPLETED = 'GAME_COMPLETED'
 
 const loadCardData = (cardData) => ({ type: CARD_DATA_LOADED, cardData })
 const setSelectedCard = (selectedCard) => ({ type: CARD_SELECTED, selectedCard })
@@ -13,6 +15,8 @@ const resetTurn = () => ({ type: TURN_RESET })
 const cardsRemoved = (nextCards, removedCards) => ({ type: CARDS_REMOVED, nextCards, removedCards })
 const changeSetting = (nextSetting) => ({ type: SETTING_CHANGED, nextSetting })
 const toggleGameStatus = (nextStatus) => ({ type: GAME_STATUS_CHANGED, nextStatus })
+const timeRecorded = (elapsedTime) => ({ type: TIME_RECORDED, elapsedTime })
+const completeGame = () => ({ type: GAME_COMPLETED })
 
 const gameState = {
   setting: 'easy',
@@ -20,6 +24,8 @@ const gameState = {
   selectedCards: [],
   removedCards: [],
   gameInProgress: false,
+  lastTimeElaspsed: null,
+  gameCompleted: false,
 }
 
 export const fetchCards = () => {
@@ -55,9 +61,19 @@ export const endTurn = () => dispatch => { dispatch(resetTurn()) }
 export const removeCards = removedCard => {
   return (dispatch, getState) => {
     const state = getState()
-    const { cards } = state.game
+    const { cards, gameInProgress } = state.game
 
     let nextCards = cards.filter(card => {return card !== removedCard})
+
+    if (!nextCards.length) {
+      dispatch(cardsRemoved(nextCards, removedCard))
+      dispatch(resetTurn())
+
+      dispatch(toggleGameStatus(!gameInProgress))
+      dispatch(completeGame())
+
+      return
+    }
 
     dispatch(cardsRemoved(nextCards, removedCard))
     dispatch(resetTurn())
@@ -78,6 +94,10 @@ export const editSetting = (nextSetting) =>  {
   }
 }
 
+export const recordElapsedTime = elapsedTime => dispatch => {
+  dispatch(timeRecorded(elapsedTime))
+}
+
 export default (state = gameState, action) => {
   switch (action.type) {
     case CARD_DATA_LOADED:
@@ -92,6 +112,10 @@ export default (state = gameState, action) => {
       return Object.assign({}, state, { setting: action.nextSetting })
     case GAME_STATUS_CHANGED:
       return Object.assign({}, state, { gameInProgress: action.nextStatus })
+    case TIME_RECORDED:
+      return Object.assign({}, state, { lastTimeElaspsed: action.elapsedTime })
+    case GAME_COMPLETED:
+      return Object.assign({}, state, { gameCompleted: !state.gameCompleted })
     default:
       return state
   }

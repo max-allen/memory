@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { recordElapsedTime } from '../../store'
 import PropTypes from 'prop-types'
 
 import styles from './Timer.scss'
@@ -34,6 +36,7 @@ class TimerContainer extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.interval)
+    this.props.sendTime(this.state.secondsElapsed)
   }
 
   tick() {
@@ -47,4 +50,12 @@ class TimerContainer extends React.Component {
   }
 }
 
-export default TimerContainer
+const mapDispatch = dispatch => {
+  return {
+    sendTime: (time) => {
+      return dispatch(recordElapsedTime(time))
+    },
+  }
+}
+
+export default connect(null, mapDispatch)(TimerContainer)
