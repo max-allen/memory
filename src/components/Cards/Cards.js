@@ -9,7 +9,7 @@ import styles from './Cards.scss'
 class Card extends Component {
   constructor() {
     super()
-    this.state = { showing: false, selected: false }
+    this.state = { selected: false }
 
     this.cardRef = React.createRef()
     this.handleClick = this.handleClick.bind(this)
@@ -43,13 +43,19 @@ class Card extends Component {
   }
 
   chooseCard(card) {
-    this.setState({ selected: true })
-    this.props.updateSelected(card)
+    const { selected } = this.state
+
+    if (!selected) {
+      this.setState({ selected: true })
+      setTimeout(() => {
+        this.props.updateSelected(card)
+      }, 100)
+    }
   }
 
   render() {
     const { id, data } = this.props
-    const { showing } = this.state
+    const { selected } = this.state
     const { cardRef, chooseCard } = this
 
     return (
@@ -61,7 +67,7 @@ class Card extends Component {
         }}
         role="button"
       >
-        {showing ? data : ''}
+        {selected ? data : ''}
       </div>
     )
   }

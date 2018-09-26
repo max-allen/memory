@@ -30,15 +30,7 @@ class Game extends Component {
   }
 
   render() {
-    const {
-      cards,
-      store,
-      removedCards,
-      setting,
-      changeSetting,
-      gameInProgress,
-      gameCompleted,
-    } = this.props
+    const { cards, store, removedCards, setting, changeSetting, gameCompleted } = this.props
 
     return (
       <div>
@@ -46,7 +38,6 @@ class Game extends Component {
           removedCards={removedCards}
           setting={setting}
           changeSetting={changeSetting}
-          gameInProgress={gameInProgress}
           gameCompleted={gameCompleted}
           store={store}
         />
@@ -67,7 +58,6 @@ Game.propTypes = {
   getCards: PropTypes.func.isRequired,
   removeCards: PropTypes.func.isRequired,
   endTurn: PropTypes.func.isRequired,
-  gameInProgress: PropTypes.bool,
   gameCompleted: PropTypes.bool,
 }
 
