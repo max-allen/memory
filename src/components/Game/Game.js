@@ -13,7 +13,7 @@ class Game extends Component {
     super()
 
     this.state = {
-       gameOver: false,
+      gameOver: false,
     }
   }
 
@@ -41,7 +41,7 @@ class Game extends Component {
   }
 
   render() {
-    const { cards, store, removedCards, setting, changeSetting, gameInProgress, lastTimeElapsed } = this.props
+    const { cards, store, removedCards, setting, changeSetting, gameInProgress, gameCompleted, lastTimeElapsed } = this.props
 
     return (
       <div>
@@ -54,14 +54,15 @@ class Game extends Component {
           lastTimeElapsed={lastTimeElapsed}
         />
 
-        {cards.length && (
+        {cards.length ? (
           <Cards 
             store={store} 
           />
-        )}
+        ) : null }
 
-        {this.props.gameOver &&
-          <div>Game Over!</div>
+        {this.props.gameCompleted ? (
+            <div>Game Over!</div>
+          ) : null
         }
 
       </div>
@@ -77,6 +78,7 @@ const mapState = state => {
     setting: state.game.setting,
     gameInProgress: state.game.gameInProgress,
     lastTimeElapsed: state.game.lastTimeElapsed,
+    gameCompleted: state.game.gameCompleted,
   }
 }
 

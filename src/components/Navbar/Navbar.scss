@@ -6,9 +6,28 @@
 
 .header {
   font-family: sans-serif;
+  margin-bottom: 10px;
 }
 
 .cards {
   display: inline-block;
   margin-right: 10px;
+}
+
+.timerLabel {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.timerContainer {
+	margin-bottom: 25px;
+	border: 1px solid gray;
+}
+
+.dropdownLabel {
+	display: inline-block;
+}
+
+.dropdown {
+	display: inline-block;
 }

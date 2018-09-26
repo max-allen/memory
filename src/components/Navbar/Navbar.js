@@ -9,18 +9,24 @@ const Navbar = (props) =>  {
     <div className={styles.container}>
       <h1 className={styles.header}>Memory!</h1>
 
-      { gameInProgress && 
-        <Timer key={setting} store={store} />
+      { gameInProgress &&
+        <div styles={styles.timerContainer}>
+          <p className={styles.timerLabel}>Timer: </p>
+          <Timer key={setting} store={store} />
+        </div>
       }
 
-    <select onChange={changeSetting}>
-      {['easy', 'hard'].map(level => {
-        return (
-          <option key={level.toString()} defaultValue={setting}>{level}</option>
-        )
-      })
-      }
-    </select>
+    <div>
+      <p styles={styles.dropdownLabel}>Game Difficulty:</p>
+      <select className={styles.dropdown} onChange={changeSetting}>
+        {['easy', 'hard'].map(level => {
+          return (
+            <option key={level.toString()} defaultValue={setting}>{level}</option>
+          )
+        })
+        }
+      </select>
+    </div>
 
       {Object.keys(removedCards).length ?
         Object.keys(removedCards).map((idx) => {
