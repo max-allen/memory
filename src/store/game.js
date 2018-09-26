@@ -6,8 +6,8 @@ const TURN_RESET = 'TURN_RESET'
 const CARDS_REMOVED = 'CARDS_REMOVED'
 const SETTING_CHANGED = 'SETTING_CHANGED'
 const GAME_STATUS_CHANGED = 'GAME_STATUS_CHANGED'
-const TIME_RECORDED = 'TIME_RECORDED'
 const GAME_COMPLETED = 'GAME_COMPLETED'
+const CLEAR_REMOVED_CARDS = 'CLEAR_REMOVED_CARDS'
 
 const loadCardData = (cardData) => ({ type: CARD_DATA_LOADED, cardData })
 const setSelectedCard = (selectedCard) => ({ type: CARD_SELECTED, selectedCard })
@@ -15,8 +15,8 @@ const resetTurn = () => ({ type: TURN_RESET })
 const cardsRemoved = (nextCards, removedCards) => ({ type: CARDS_REMOVED, nextCards, removedCards })
 const changeSetting = (nextSetting) => ({ type: SETTING_CHANGED, nextSetting })
 const toggleGameStatus = (nextStatus) => ({ type: GAME_STATUS_CHANGED, nextStatus })
-const timeRecorded = (elapsedTime) => ({ type: TIME_RECORDED, elapsedTime })
 const completeGame = () => ({ type: GAME_COMPLETED })
+const clearRemovedCards = () => ({ type: CLEAR_REMOVED_CARDS })
 
 const gameState = {
   setting: 'easy',
@@ -24,7 +24,6 @@ const gameState = {
   selectedCards: [],
   removedCards: [],
   gameInProgress: false,
-  lastTimeElaspsed: null,
   gameCompleted: false,
 }
 
@@ -90,12 +89,9 @@ export const editSetting = (nextSetting) =>  {
     }
 
     dispatch(changeSetting(nextSetting))
+    dispatch(clearRemovedCards())
     dispatch(fetchCards())
   }
-}
-
-export const recordElapsedTime = elapsedTime => dispatch => {
-  dispatch(timeRecorded(elapsedTime))
 }
 
 export default (state = gameState, action) => {
@@ -108,12 +104,12 @@ export default (state = gameState, action) => {
       return Object.assign({}, state, { selectedCards: [] })
     case CARDS_REMOVED:
       return Object.assign({}, state, { cards: action.nextCards, removedCards: state.removedCards.slice().concat([(action.removedCards  )]) })
+    case CLEAR_REMOVED_CARDS:
+      return Object.assign({}, state, { removedCards: [] })
     case SETTING_CHANGED:
       return Object.assign({}, state, { setting: action.nextSetting })
     case GAME_STATUS_CHANGED:
       return Object.assign({}, state, { gameInProgress: action.nextStatus })
-    case TIME_RECORDED:
-      return Object.assign({}, state, { lastTimeElaspsed: action.elapsedTime })
     case GAME_COMPLETED:
       return Object.assign({}, state, { gameCompleted: !state.gameCompleted })
     default:

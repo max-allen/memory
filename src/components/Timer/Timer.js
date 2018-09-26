@@ -30,13 +30,18 @@ class TimerContainer extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.interval = setInterval(this.tick.bind(this), 1000)
+  componentDidUpdate(prevProps) {
+    if (this.props.gameInProgress) {
+      if (!prevProps.gameInProgress) {
+        this.interval = setInterval(this.tick.bind(this), 1000)
+      }
+    } else {
+      if (prevProps.gameInProgress) clearInterval(this.interval)
+    }
   }
 
   componentWillUnmount() {
     clearInterval(this.interval)
-    this.props.sendTime(this.state.secondsElapsed)
   }
 
   tick() {
@@ -50,12 +55,10 @@ class TimerContainer extends React.Component {
   }
 }
 
-const mapDispatch = dispatch => {
+const mapState = state => {
   return {
-    sendTime: (time) => {
-      return dispatch(recordElapsedTime(time))
-    },
+    gameInProgress: state.game.gameInProgress,
   }
 }
 
-export default connect(null, mapDispatch)(TimerContainer)
+export default connect(mapState)(TimerContainer)

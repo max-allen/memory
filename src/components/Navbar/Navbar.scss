@@ -2,6 +2,8 @@
   border: 1px solid gray;
   padding-top: 25px;
   padding-bottom: 50px;
+  padding-left: 10px;
+  background-color: #F8F0E7;
 }
 
 .header {
@@ -20,14 +22,15 @@
 }
 
 .timerContainer {
-	margin-bottom: 25px;
-	border: 1px solid gray;
+	margin-bottom: 10px;
 }
 
 .dropdownLabel {
 	display: inline-block;
+	margin-right: 5px;
 }
 
 .dropdown {
 	display: inline-block;
+	margin-bottom: 10px;
 }

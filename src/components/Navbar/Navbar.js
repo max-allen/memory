@@ -2,22 +2,14 @@ import React from 'react'
 import Timer from '../Timer/Timer'
 import styles from './Navbar.scss'
 
-const Navbar = (props) =>  {
-  const { removedCards, setting, changeSetting, gameInProgress, store, lastTimeElapsed } = props
+const Navbar = props => {
+  const { removedCards, setting, changeSetting, gameInProgress, gameCompleted, store, lastTimeElapsed } = props
+
+
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.header}>Memory!</h1>
-
-      { gameInProgress &&
-        <div styles={styles.timerContainer}>
-          <p className={styles.timerLabel}>Timer: </p>
-          <Timer key={setting} store={store} />
-        </div>
-      }
-
-    <div>
-      <p styles={styles.dropdownLabel}>Game Difficulty:</p>
+      <label className={styles.dropdownLabel}>Game Difficulty:</label>
       <select className={styles.dropdown} onChange={changeSetting}>
         {['easy', 'hard'].map(level => {
           return (
@@ -26,7 +18,12 @@ const Navbar = (props) =>  {
         })
         }
       </select>
-    </div>
+
+      
+      <div className={styles.timerContainer}>
+        <p className={styles.timerLabel}>Timer: </p>
+        <Timer key={setting} store={store} />
+      </div>
 
       {Object.keys(removedCards).length ?
         Object.keys(removedCards).map((idx) => {
