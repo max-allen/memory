@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import Navbar from '../Navbar/Navbar'
+import Header from '../Header/Header'
 import Cards from '../Cards/Cards'
 import { fetchCards, endTurn, removeCards, editSetting } from '../../store'
 
@@ -34,7 +34,7 @@ class Game extends Component {
 
     return (
       <div>
-        <Navbar
+        <Header
           removedCards={removedCards}
           setting={setting}
           changeSetting={changeSetting}

@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Timer from '../Timer/Timer'
-import styles from './Navbar.scss'
+import styles from './Header.scss'
 
-const Navbar = props => {
+const Header = props => {
   const { removedCards, setting, changeSetting, gameCompleted, store } = props
 
   return (
@@ -35,7 +35,7 @@ const Navbar = props => {
   )
 }
 
-Navbar.propTypes = {
+Header.propTypes = {
   store: PropTypes.instanceOf(Object),
   removedCards: PropTypes.instanceOf(Array),
   setting: PropTypes.string,
@@ -43,4 +43,4 @@ Navbar.propTypes = {
   gameCompleted: PropTypes.bool,
 }
 
-export default Navbar
+export default Header
