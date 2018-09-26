@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import Timer from '../Timer/Timer'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import Navbar from '../Navbar/Navbar'
 import Cards from '../Cards/Cards'
-import axios from 'axios'
-import { connect } from 'react-redux'
 import { fetchCards, endTurn, removeCards, editSetting } from '../../store'
 
 class Game extends Component {
@@ -15,12 +14,12 @@ class Game extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     let { selectedCards } = this.props
 
     if (selectedCards.length === 2) {
-      selectedCards = selectedCards.map((card) => { return Object.values(card)[0] })
-      let firstCard = selectedCards.splice(0, 1)[0]
+      selectedCards = selectedCards.map(card => Object.values(card)[0])
+      const firstCard = selectedCards.splice(0, 1)[0]
 
       if (selectedCards.includes(firstCard)) {
         this.props.removeCards(firstCard)
@@ -52,14 +51,24 @@ class Game extends Component {
           store={store}
         />
 
-        {cards.length ? (
-          <Cards 
-            store={store} 
-          />
-        ) : null }
+        {cards.length ? <Cards store={store} /> : null}
       </div>
     )
   }
+}
+
+Game.propTypes = {
+  cards: PropTypes.instanceOf(Array),
+  store: PropTypes.instanceOf(Object),
+  selectedCards: PropTypes.instanceOf(Array),
+  removedCards: PropTypes.instanceOf(Array),
+  setting: PropTypes.string,
+  changeSetting: PropTypes.func.isRequired,
+  getCards: PropTypes.func.isRequired,
+  removeCards: PropTypes.func.isRequired,
+  endTurn: PropTypes.func.isRequired,
+  gameInProgress: PropTypes.bool,
+  gameCompleted: PropTypes.bool,
 }
 
 const mapState = state => ({

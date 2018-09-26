@@ -1,6 +1,6 @@
+/* eslint-disable no-lonely-if */
 import React from 'react'
 import { connect } from 'react-redux'
-import { recordElapsedTime } from '../../store'
 import PropTypes from 'prop-types'
 
 import styles from './Timer.scss'
@@ -55,10 +55,12 @@ class TimerContainer extends React.Component {
   }
 }
 
-const mapState = state => {
-  return {
-    gameInProgress: state.game.gameInProgress,
-  }
+const mapState = state => ({
+  gameInProgress: state.game.gameInProgress,
+})
+
+TimerContainer.propTypes = {
+  gameInProgress: PropTypes.bool,
 }
 
 export default connect(mapState)(TimerContainer)

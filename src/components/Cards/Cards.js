@@ -1,10 +1,13 @@
+/* eslint-disable react/no-did-update-set-state */
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { selectCard } from '../../store'
 import styles from './Cards.scss'
 
 class Card extends Component {
-  constructor(props) {
+  constructor() {
     super()
     this.state = { showing: false, selected: false }
 
@@ -20,7 +23,7 @@ class Card extends Component {
   componentDidUpdate(prevProps) {
     if (!this.props.selectedCards.length) {
       if (prevProps.selectedCards.length) {
-        this.setState ({ showing: false, selected: false})
+        this.setState({ showing: false, selected: false })
       }
     }
   }
@@ -50,15 +53,29 @@ class Card extends Component {
     const { cardRef, chooseCard } = this
 
     return (
-      <div className={styles.card} ref={cardRef} onClick={() => { chooseCard({ [id]: data }) }}>
+      <div
+        className={styles.card}
+        ref={cardRef}
+        onClick={() => {
+          chooseCard({ [id]: data })
+        }}
+        role="button"
+      >
         {showing ? data : ''}
       </div>
     )
   }
 }
 
+Card.propTypes = {
+  data: PropTypes.string,
+  id: PropTypes.number,
+  updateSelected: PropTypes.func.isRequired,
+  selectedCards: PropTypes.instanceOf(Array),
+}
+
 const CardGrid = props => {
-  const { cards, store, updateSelected, selectedCards } = props
+  const { cards, updateSelected, selectedCards } = props
 
   return (
     <div className={styles.container}>
@@ -75,24 +92,21 @@ const CardGrid = props => {
   )
 }
 
-const mapState = state => {
-  return {
-    cards: state.game.cards,
-    selectedCards: state.game.selectedCards,
-  }
+const mapState = state => ({
+  cards: state.game.cards,
+  selectedCards: state.game.selectedCards,
+})
+
+const mapDispatch = dispatch => ({
+  updateSelected: card => {
+    dispatch(selectCard(card))
+  },
+})
+
+CardGrid.propTypes = {
+  cards: PropTypes.instanceOf(Array),
+  updateSelected: PropTypes.func.isRequired,
+  selectedCards: PropTypes.instanceOf(Array),
 }
-
-const mapDispatch = dispatch => {
-  return {
-    updateSelected: card => {
-      dispatch(selectCard(card))
-    },
-  }
-}
-
-// CardGrid.propTypes = {
-//   cards: PropTypes.
-
-// }
 
 export default connect(mapState, mapDispatch)(CardGrid)
