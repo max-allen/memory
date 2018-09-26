@@ -48,6 +48,7 @@ class Game extends Component {
           setting={setting}
           changeSetting={changeSetting}
           gameInProgress={gameInProgress}
+          gameCompleted={gameCompleted}
           store={store}
         />
 

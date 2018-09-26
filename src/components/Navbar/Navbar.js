@@ -5,8 +5,6 @@ import styles from './Navbar.scss'
 const Navbar = props => {
   const { removedCards, setting, changeSetting, gameInProgress, gameCompleted, store, lastTimeElapsed } = props
 
-
-
   return (
     <div className={styles.container}>
       <label className={styles.dropdownLabel}>Game Difficulty:</label>
@@ -32,6 +30,10 @@ const Navbar = props => {
           )
         })
       : null
+    }
+
+    { gameCompleted &&
+      <p>Game Over! Refresh your browser to play again!</p>
     }
 
     </div>
