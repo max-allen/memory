@@ -22,7 +22,7 @@ const clearCompletedStatus = () => ({ type: CLEAR_COMPLETED_STATUS })
 
 const gameState = {
   setting: 'easy',
-  cards: {},
+  cards: [],
   selectedCards: [],
   removedCards: [],
   gameInProgress: false,
