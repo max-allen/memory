@@ -1,22 +1,22 @@
 import axios from 'axios'
 
-const CARD_DATA_LOADED = 'CARD_DATA_LOADED'
-const CARD_SELECTED = 'CARD_SELECTED'
-const TURN_RESET = 'TURN_RESET'
-const CARDS_REMOVED = 'CARDS_REMOVED'
-const SETTING_CHANGED = 'SETTING_CHANGED'
-const GAME_STATUS_CHANGED = 'GAME_STATUS_CHANGED'
-const GAME_COMPLETED = 'GAME_COMPLETED'
+const LOAD_CARD_DATA = 'LOAD_CARD_DATA'
+const SELECT_CARD = 'SELECT_CARD'
+const RESET_TURN = 'RESET_TURN'
+const REMOVE_CARDS = 'REMOVE_CARDS'
+const CHANGE_SETTING = 'CHANGE_SETTING'
+const CHANGE_GAME_STATUS = 'CHANGE_GAME_STATUS'
+const END_GAME = 'END_GAME'
 const CLEAR_REMOVED_CARDS = 'CLEAR_REMOVED_CARDS'
 const CLEAR_COMPLETED_STATUS = 'CLEAR_COMPLETED_STATUS'
 
-const loadCardData = cardData => ({ type: CARD_DATA_LOADED, cardData })
-const setSelectedCard = selectedCard => ({ type: CARD_SELECTED, selectedCard })
-const resetTurn = () => ({ type: TURN_RESET })
-const cardsRemoved = (nextCards, removedCards) => ({ type: CARDS_REMOVED, nextCards, removedCards })
-const changeSetting = nextSetting => ({ type: SETTING_CHANGED, nextSetting })
-const toggleGameStatus = nextStatus => ({ type: GAME_STATUS_CHANGED, nextStatus })
-const completeGame = () => ({ type: GAME_COMPLETED })
+const loadCardData = cardData => ({ type: LOAD_CARD_DATA, cardData })
+const setSelectedCard = selectedCard => ({ type: SELECT_CARD, selectedCard })
+const resetTurn = () => ({ type: RESET_TURN })
+const cardsRemoved = (nextCards, removedCards) => ({ type: REMOVE_CARDS, nextCards, removedCards })
+const changeSetting = nextSetting => ({ type: CHANGE_SETTING, nextSetting })
+const toggleGameStatus = nextStatus => ({ type: CHANGE_GAME_STATUS, nextStatus })
+const completeGame = () => ({ type: END_GAME })
 const clearRemovedCards = () => ({ type: CLEAR_REMOVED_CARDS })
 const clearCompletedStatus = () => ({ type: CLEAR_COMPLETED_STATUS })
 
@@ -97,26 +97,26 @@ export const editSetting = nextSetting => (dispatch, getState) => {
 
 export default (state = gameState, action) => {
   switch (action.type) {
-    case CARD_DATA_LOADED:
+    case LOAD_CARD_DATA:
       return Object.assign({}, state, { cards: action.cardData })
-    case CARD_SELECTED:
+    case SELECT_CARD:
       return Object.assign({}, state, {
         selectedCards: state.selectedCards.slice().concat([action.selectedCard]),
       })
-    case TURN_RESET:
+    case RESET_TURN:
       return Object.assign({}, state, { selectedCards: [] })
-    case CARDS_REMOVED:
+    case REMOVE_CARDS:
       return Object.assign({}, state, {
         cards: action.nextCards,
         removedCards: state.removedCards.slice().concat([action.removedCards]),
       })
     case CLEAR_REMOVED_CARDS:
       return Object.assign({}, state, { removedCards: [] })
-    case SETTING_CHANGED:
+    case CHANGE_SETTING:
       return Object.assign({}, state, { setting: action.nextSetting })
-    case GAME_STATUS_CHANGED:
+    case CHANGE_GAME_STATUS:
       return Object.assign({}, state, { gameInProgress: action.nextStatus })
-    case GAME_COMPLETED:
+    case END_GAME:
       return Object.assign({}, state, { gameCompleted: true })
     case CLEAR_COMPLETED_STATUS:
       return Object.assign({}, state, { gameCompleted: false })
