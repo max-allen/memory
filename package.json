@@ -1,24 +1,24 @@
 {
-  "name": "nyt-games-web-code-test",
-  "author": "Your Name Here",
-  "description": "A game we won’t soon forget",
+  "name": "memory",
+  "author": "Max Allen",
+  "description": "card game",
   "version": "1.0.0",
   "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NYTimes/games-web-code-test"
+    "url": ""
   },
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.0", 
     "babel-preset-kyt-react": "0.3.0",
     "compression": "1.7.1",
     "eslint-config-kyt": "^0.5.0",
     "express": "4.16.2",
     "kyt": "0.9.0",
     "prop-types": "^15.6.2",
-    "react": "16.3.2",
-    "react-dom": "16.4.0",
+    "react": "^16.7.0-alpha.0",
+    "react-dom": "^16.7.0-alpha.0",
     "react-redux": "5.0.7",
     "redux": "4.0.0",
     "redux-logger": "3.0.6",

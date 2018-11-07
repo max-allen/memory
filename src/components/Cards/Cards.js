@@ -80,27 +80,23 @@ Card.propTypes = {
   selectedCards: PropTypes.instanceOf(Array),
 }
 
-const CardGrid = props => {
-  const { cards, updateSelected, selectedCards } = props
+const CardGrid = ({ cards, updateSelected, selectedCards }) => (
+  <div className={styles.container}>
+    {cards.map((card, idx) => (
+      <Card
+        key={`${idx.toString()}${card}`}
+        id={idx}
+        data={card}
+        updateSelected={updateSelected}
+        selectedCards={selectedCards}
+      />
+    ))}
+  </div>
+)
 
-  return (
-    <div className={styles.container}>
-      {cards.map((card, idx) => (
-        <Card
-          key={`${idx.toString()}${card}`}
-          id={idx}
-          data={card}
-          updateSelected={updateSelected}
-          selectedCards={selectedCards}
-        />
-      ))}
-    </div>
-  )
-}
-
-const mapState = state => ({
-  cards: state.game.cards,
-  selectedCards: state.game.selectedCards,
+const mapState = ({ game: { cards, selectedCards } }) => ({
+  cards,
+  selectedCards,
 })
 
 const mapDispatch = dispatch => ({
