@@ -1,5 +1,5 @@
 /* eslint-disable no-lonely-if */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -16,51 +16,27 @@ export const formatTime = time => {
   return `${m}:${ss}`
 }
 
-const Timer = ({ time = 0 }) => <div className={styles.timer}>{formatTime(time)}</div>
+function Timer({ gameInProgress }) {
+  const [secondsElapsed, setSecondsElapsed] = useState(0)
+
+  useEffect(
+    () => {
+      if (gameInProgress) {
+        const interval = setInterval(() => {
+          setSecondsElapsed(secondsElapsed + 1)
+        }, 1000)
+        return () => clearInterval(interval)
+      }
+    },
+    [gameInProgress, secondsElapsed]
+  )
+  return <div className={styles.timer}>{formatTime(secondsElapsed)}</div>
+}
+
+const mapState = ({ game: { gameInProgress } }) => ({ gameInProgress })
 
 Timer.propTypes = {
-  time: PropTypes.number,
-}
-
-class TimerContainer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      secondsElapsed: 0,
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.gameInProgress) {
-      if (!prevProps.gameInProgress) {
-        this.interval = setInterval(this.tick.bind(this), 1000)
-      }
-    } else {
-      if (prevProps.gameInProgress) clearInterval(this.interval)
-    }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval)
-  }
-
-  tick() {
-    this.setState({
-      secondsElapsed: this.state.secondsElapsed + 1,
-    })
-  }
-
-  render() {
-    return <Timer time={this.state.secondsElapsed} />
-  }
-}
-
-const mapState = state => ({
-  gameInProgress: state.game.gameInProgress,
-})
-
-TimerContainer.propTypes = {
   gameInProgress: PropTypes.bool,
 }
 
-export default connect(mapState)(TimerContainer)
+export default connect(mapState)(Timer)
