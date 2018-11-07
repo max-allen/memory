@@ -1,76 +1,46 @@
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { selectCard } from '../../store'
 import styles from './Cards.scss'
 
-class Card extends Component {
-  constructor() {
-    super()
-    this.state = { selected: false }
+function Card({ data, id, updateSelected, selectedCards }) {
+  const [selected, setSelected] = useState(false)
 
-    this.cardRef = React.createRef()
-    this.handleClick = this.handleClick.bind(this)
-    this.chooseCard = this.chooseCard.bind(this)
-  }
-
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handleClick)
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.props.selectedCards.length) {
-      if (prevProps.selectedCards.length) {
-        this.setState({ showing: false, selected: false })
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick)
-  }
-
-  handleClick(e) {
-    const { showing, selected } = this.state
-
+  const chooseCard = card => {
     if (!selected) {
-      if (this.cardRef.current.contains(e.target)) {
-        this.setState({ showing: !showing })
-      }
-    }
-  }
+      setSelected(!selected)
 
-  chooseCard(card) {
-    const { selected } = this.state
+      /* Timeout is a UX related concern. Gives user time 
+      to observe match before cards are removed from play. */
 
-    if (!selected) {
-      this.setState({ selected: true })
       setTimeout(() => {
-        this.props.updateSelected(card)
-      }, 100)
+        updateSelected(card)
+      }, 200)
     }
   }
 
-  render() {
-    const { id, data } = this.props
-    const { selected } = this.state
-    const { cardRef, chooseCard } = this
+  useEffect(
+    () => {
+      // If there are no longer any selected cards on the game state, follow suit here
+      if (!selectedCards.length) setSelected(false)
+    },
+    [selectedCards]
+  )
 
-    return (
-      <div
-        className={styles.card}
-        ref={cardRef}
-        onClick={() => {
-          chooseCard({ [id]: data })
-        }}
-        role="button"
-      >
-        {selected ? data : ''}
-      </div>
-    )
-  }
+  return (
+    <div
+      className={styles.card}
+      onClick={() => {
+        chooseCard({ [id]: data })
+      }}
+      role="button"
+    >
+      {selected ? data : ''}
+    </div>
+  )
 }
 
 Card.propTypes = {
