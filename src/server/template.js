@@ -16,7 +16,7 @@ export default vo => `<!DOCTYPE html>
         : ''
     }
 
-    <title>Web Code Test</title>
+    <title>Memory</title>
   </head>
 
   <body>
