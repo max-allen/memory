@@ -1,4 +1,4 @@
-# NYT Web Code Test
+# Memory
 
 ## Getting Started
 
@@ -15,5 +15,3 @@ view the app at `localhost:3000`.
 
 * If webpack.base.js in node_modules/kyt/config throws an error, please add a callback
   to the fs.writeFile function in line 72!
-
-I enjoyed this project! Thanks for your time and consideration. -Max
