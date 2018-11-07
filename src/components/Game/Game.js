@@ -1,51 +1,46 @@
-import React, { Component } from 'react'
+/* eslint-disable no-unused-expressions */
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Header from '../Header/Header'
 import Cards from '../Cards/Cards'
 import { fetchCards, endTurn, removeCards, editSetting } from '../../store'
 
-class Game extends Component {
-  componentDidMount() {
-    const { cards } = this.props
-
-    if (!Object.keys(cards).length) {
-      this.props.getCards()
-    }
+function Game({
+  cards,
+  selectedCards,
+  getCards,
+  store,
+  removeCards,
+  removedCards,
+  setting,
+  changeSetting,
+  endTurn,
+  gameCompleted,
+}) {
+  const checkPair = () => {
+    selectedCards = selectedCards.map(card => Object.values(card)[0])
+    const firstCard = selectedCards.splice(0, 1)[0]
+    selectedCards.includes(firstCard) ? removeCards(firstCard) : endTurn()
   }
 
-  componentDidUpdate() {
-    let { selectedCards } = this.props
+  useEffect(() => {
+    if (!Object.keys(cards).length && !gameCompleted) getCards()
+    if (selectedCards.length === 2) checkPair()
+  })
+  return (
+    <div>
+      <Header
+        removedCards={removedCards}
+        setting={setting}
+        changeSetting={changeSetting}
+        gameCompleted={gameCompleted}
+        store={store}
+      />
 
-    if (selectedCards.length === 2) {
-      selectedCards = selectedCards.map(card => Object.values(card)[0])
-      const firstCard = selectedCards.splice(0, 1)[0]
-
-      if (selectedCards.includes(firstCard)) {
-        this.props.removeCards(firstCard)
-      } else {
-        this.props.endTurn()
-      }
-    }
-  }
-
-  render() {
-    const { cards, store, removedCards, setting, changeSetting, gameCompleted } = this.props
-
-    return (
-      <div>
-        <Header
-          removedCards={removedCards}
-          setting={setting}
-          changeSetting={changeSetting}
-          gameCompleted={gameCompleted}
-          store={store}
-        />
-
-        {cards.length ? <Cards store={store} /> : null}
-      </div>
-    )
-  }
+      {cards.length ? <Cards store={store} /> : null}
+    </div>
+  )
 }
 
 Game.propTypes = {
@@ -61,13 +56,15 @@ Game.propTypes = {
   gameCompleted: PropTypes.bool,
 }
 
-const mapState = state => ({
-  cards: state.game.cards,
-  selectedCards: state.game.selectedCards,
-  removedCards: state.game.removedCards,
-  setting: state.game.setting,
-  gameInProgress: state.game.gameInProgress,
-  gameCompleted: state.game.gameCompleted,
+const mapState = ({
+  game: { cards, selectedCards, removedCards, setting, gameInProgress, gameCompleted },
+}) => ({
+  cards,
+  selectedCards,
+  removedCards,
+  setting,
+  gameInProgress,
+  gameCompleted,
 })
 
 const mapDispatch = dispatch => ({
